@@ -1,0 +1,115 @@
+name: ${project.name}
+main: com.endercrest.pl3xnpc.Pl3xNPC
+version: ${project.version}
+website: ${project.url}
+description: Basic NPC plugin for Pl3xcraft
+authors: [BillyGalbreath,tcvs]
+load: POSTWORLD
+softdepend: [BKCommonLib,Multiverse-Core,MultiWorld,VanishNoPacket,WorldGuard]
+commands:
+    npc:
+        description: The all-in-1 command to control NPCs.
+        usage: /<command> help
+
+permissions:
+    pl3xnpc.create:
+        description: Allows you to create NPCs.
+        default: op
+        children:
+            pl3xnpc.limit.1: true
+            pl3xnpc.select: true
+
+    pl3xnpc.create.wgoverride:
+        description: Allows you to create an NPC regardless of WorldGuard permissions
+        default: op
+
+    pl3xnpc.delete:
+        description: Allows you to delete NPCs.
+        default: op
+        children:
+            pl3xnpc.select: true
+
+    pl3xnpc.select:
+        description: Allows you to select NPCs.
+        default: op
+
+    pl3xnpc.set.face:
+        description: Allows you to set what/where the NPC looks at.
+        default: op
+    pl3xnpc.set.item:
+        description: Allows you to set items on the NPC (armor, item in hand).
+        default: op
+    pl3xnpc.set.item.canspawn:
+        description: Allows you to set items on the NPC without having them in your inventory.
+        default: op
+    pl3xnpc.set.lookat:
+        description: Allows you to set the look-at aware radius of an NPC.
+        default: op
+    pl3xnpc.set.message.clear:
+        description: Allows you to reset the message radius and say values of an NPC.
+        default: op
+    pl3xnpc.set.message.radius:
+        description: Allows you to set the message aware radius of an NPC.
+        default: op
+    pl3xnpc.set.message.say:
+        description: Allows you to set the message an NPC says.
+        default: op
+    pl3xnpc.set.mobname:
+        description: Allows you to toggle the display name on/off for mobtype NPCs.
+        default: op
+    pl3xnpc.set.mobtype:
+        description: Allows you to set the mob type of an NPC (creeper, chicken, blaze, villager, etc).
+        default: op
+    pl3xnpc.set.name:
+        description: Allows you to set an NPCs name.
+        default: op
+    pl3xnpc.set.owner:
+        description: Allows you to set the owner of an NPC (removes ownership from you).
+        default: op
+
+    pl3xnpc.set.message.*:
+        description: Gives all set message permissions.
+        default: false
+        children:
+            pl3xnpc.set.message.clear: true
+            pl3xnpc.set.message.radius: true
+            pl3xnpc.set.message.say: true
+
+    pl3xnpc.set.*:
+        description: Gives all set permissions.
+        default: false
+        children:
+            pl3xnpc.select: true
+            pl3xnpc.set.face: true
+            pl3xnpc.set.item: true
+            pl3xnpc.set.lookat: true
+            pl3xnpc.set.message.*: true
+            pl3xnpc.set.mobname: true
+            pl3xnpc.set.mobtype: true
+            pl3xnpc.set.name: true
+            pl3xnpc.set.owner: true
+
+    pl3xnpc.limit.*:
+        description: Unlimited amount of NPCs can be created
+        default: op
+
+    pl3xnpc.admin:
+        description: Allows you to use the admin commands.
+        default: op
+        children:
+            pl3xnpc.create: true
+            pl3xnpc.create.wgoverride: true
+            pl3xnpc.delete: true
+            pl3xnpc.set.*: true
+            pl3xnpc.limit.*: true
+
+    pl3xnpc.*:
+        description: Gives every permission.
+        default: false
+        children:
+            pl3xnpc.create: true
+            pl3xnpc.create.wgoverride: true
+            pl3xnpc.delete: true
+            pl3xnpc.set.*: true
+            pl3xnpc.set.item.canspawn: true
+            pl3xnpc.admin: true
