@@ -4,6 +4,7 @@ import com.endercrest.pl3xnpc.Pl3xNPC;
 import com.endercrest.pl3xnpc.SlotType;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -133,4 +134,5 @@ public class Utils {
             wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
         return wg.canBuild(p, loc);
     }
+
 }

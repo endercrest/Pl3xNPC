@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.endercrest.pl3xnpc</groupId>
     <artifactId>Pl3xNPC</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <name>pl3xNPC</name>
     <developers>
         <developer>
@@ -20,12 +20,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.3</version>
+            <version>1.7.9-R0.1</version>
         </dependency>
         <dependency>
             <groupId>com.bergerkiller.bukkit</groupId>
             <artifactId>BKCommonLib</artifactId>
-            <version>1.57</version>
+            <version>1.58-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.kitteh.vanish</groupId>
@@ -38,6 +38,11 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>5.8.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>minecraft-server</artifactId>
+            <version>1.7.9</version>
         </dependency>
     </dependencies>
     <repositories>

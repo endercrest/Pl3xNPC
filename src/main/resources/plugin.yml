@@ -60,6 +60,12 @@ permissions:
     pl3xnpc.set.mobtype:
         description: Allows you to set the mob type of an NPC (creeper, chicken, blaze, villager, etc).
         default: op
+    pl3xnpc.set.color:
+        description: Allows you to set the color of the sheep (Black, Red, Yellow).
+        default: op
+    pl3xnpc.set.sheared:
+            description: Allows you to set if sheep is sheared.
+            default: op
     pl3xnpc.set.name:
         description: Allows you to set an NPCs name.
         default: op
@@ -86,6 +92,8 @@ permissions:
             pl3xnpc.set.message.*: true
             pl3xnpc.set.mobname: true
             pl3xnpc.set.mobtype: true
+            pl3xnpc.set.color: true
+            pl3xnpc.set.sheared: true
             pl3xnpc.set.name: true
             pl3xnpc.set.owner: true
 

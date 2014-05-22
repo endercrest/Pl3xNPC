@@ -7,13 +7,15 @@ import com.bergerkiller.bukkit.common.wrappers.DataWatcher;
 import com.endercrest.pl3xnpc.Pl3xNPC;
 import com.endercrest.pl3xnpc.npc.MobType;
 import com.endercrest.pl3xnpc.npc.NPC;
+import net.minecraft.util.com.mojang.authlib.GameProfile;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * Created by Thomas on 4/25/2014.
- */
+import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
+
 public class PacketGenerator {
     private NPC npc;
 
@@ -58,7 +60,6 @@ public class PacketGenerator {
     public CommonPacket getPlayerSpawnPacket(){
         Location loc = npc.getLocation();
         int EntityId = npc.getEntityId();
-        String name = Pl3xNPC.colorize(npc.getName());
         int itemInHand = 0;
         CommonPacket packet = new CommonPacket(PacketType.OUT_ENTITY_SPAWN_NAMED);
         int x = MathUtil.floor(loc.getX() * 32D);
@@ -67,7 +68,7 @@ public class PacketGenerator {
         byte yaw = this.getByteFromDegree(loc.getYaw());
         byte pitch = this.getByteFromDegree(loc.getPitch());
         packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.entityId, EntityId);
-        packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.profile, name);
+        packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.profile, npc.getProfile());
         packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.x, x);
         packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.y, y);
         packet.write(PacketType.OUT_ENTITY_SPAWN_NAMED.z, z);

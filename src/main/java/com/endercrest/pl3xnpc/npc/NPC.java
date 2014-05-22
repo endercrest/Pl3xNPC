@@ -7,17 +7,14 @@ import com.bergerkiller.bukkit.common.wrappers.DataWatcher;
 import com.endercrest.pl3xnpc.SlotType;
 import com.endercrest.pl3xnpc.packet.PacketGenerator;
 import com.endercrest.pl3xnpc.utils.ReflectionUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import net.minecraft.util.com.mojang.authlib.GameProfile;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Creates NPC
@@ -38,6 +35,10 @@ public class NPC implements InventoryHolder {
     private String message = "";
     private Boolean showMobName = true;
     private Inventory inventory;
+    private DyeColor sheepColor;
+    private Boolean sheared;
+    private UUID uuid;
+    private GameProfile profile;
     private PacketGenerator packetGenerator;
     private DataWatcher datawatcher;
 
@@ -48,6 +49,10 @@ public class NPC implements InventoryHolder {
             name = name.substring(0, 15);
         this.name = name;
         this.entityID = entityID;
+        this.sheepColor = DyeColor.WHITE;
+        this.sheared = false;
+        uuid = UUID.randomUUID();
+        profile = new GameProfile(uuid, name);
         if (player != null) {
             this.yaw = ReflectionUtil.getYaw(player);
             this.pitch = ReflectionUtil.getPitch(player);
@@ -57,6 +62,67 @@ public class NPC implements InventoryHolder {
         this.inventory = Bukkit.getServer().createInventory(this, 9, "NPC Inventory");
         this.packetGenerator = new PacketGenerator(this);
         this.createDefaultDatawatcher();
+    }
+
+    public GameProfile getProfile(){
+        return profile;
+    }
+
+    public void setProfile(UUID uuid, String name){
+        profile = new GameProfile(uuid, name);
+    }
+
+    /**
+     * Get the uuid of the player
+     * @return
+     */
+    public UUID getUUID(){
+        return uuid;
+    }
+
+    public void setUUID(String uuid){
+        this.uuid = UUID.fromString(uuid);
+
+    }
+
+    /**
+     * Gets Sheep Color
+     * @return Sheep Color
+     */
+    public DyeColor getSheepColor(){
+        return sheepColor;
+    }
+
+    /**
+     * Sets Sheep Color
+     * @param color The Color
+     */
+    public void setSheepColor(DyeColor color){
+        sheepColor = color;
+        if (mob != null)
+            setMob(mob);
+        despawn();
+        spawn(loc.getWorld());
+    }
+
+    /**
+     * Get if sheep is sheared
+     * @return boolean
+     */
+    public Boolean getSheared(){
+        return sheared;
+    }
+
+    /**
+     * Sets if sheep is sheared
+     * @param sheared boolean
+     */
+    public void setSheared(Boolean sheared){
+        this.sheared = sheared;
+        if (mob != null)
+            setMob(mob);
+        despawn();
+        spawn(loc.getWorld());
     }
 
     /**
@@ -380,7 +446,7 @@ public class NPC implements InventoryHolder {
             if (mob == MobType.WitherSkeleton)
                 datawatcher.set(13, (byte) 1);
             if (mob == MobType.Horse) {
-                datawatcher.set(16, (int) 	0);
+                datawatcher.set(16, 0);
             }
             if (mob == MobType.Donkey) {
                 datawatcher.set(16, 0);
@@ -398,8 +464,45 @@ public class NPC implements InventoryHolder {
                 datawatcher.set(16, 0);
                 datawatcher.set(19, (byte) 3);
             }
+            if(mob == MobType.Sheep){
+                if(sheared) {
+                    datawatcher.set(16, (byte) 16);
+                }else if(sheepColor.equals(DyeColor.BLACK)){
+                    datawatcher.set(16, (byte) 15);
+                }else if(sheepColor.equals(DyeColor.BLUE)){
+                    datawatcher.set(16, (byte) 11);
+                }else if(sheepColor.equals(DyeColor.BROWN)){
+                    datawatcher.set(16, (byte) 12);
+                }else if(sheepColor.equals(DyeColor.CYAN)){
+                    datawatcher.set(16, (byte) 9);
+                }else if(sheepColor.equals(DyeColor.GRAY)){
+                    datawatcher.set(16, (byte) 7);
+                }else if(sheepColor.equals(DyeColor.GREEN)){
+                    datawatcher.set(16, (byte) 13);
+                }else if(sheepColor.equals(DyeColor.LIGHT_BLUE)){
+                    datawatcher.set(16, (byte) 3);
+                }else if(sheepColor.equals(DyeColor.LIME)){
+                    datawatcher.set(16, (byte) 5);
+                }else if(sheepColor.equals(DyeColor.MAGENTA)){
+                    datawatcher.set(16, (byte) 10);
+                }else if(sheepColor.equals(DyeColor.ORANGE)){
+                    datawatcher.set(16, (byte) 2);
+                }else if(sheepColor.equals(DyeColor.PINK)){
+                    datawatcher.set(16, (byte) 6);
+                }else if(sheepColor.equals(DyeColor.PURPLE)){
+                    datawatcher.set(16, (byte) 10);
+                }else if(sheepColor.equals(DyeColor.RED)){
+                    datawatcher.set(16, (byte) 14);
+                }else if(sheepColor.equals(DyeColor.SILVER)){
+                    datawatcher.set(16, (byte) 8);
+                }else if(sheepColor.equals(DyeColor.WHITE)){
+                    datawatcher.set(16, (byte) 0);
+                }else if(sheepColor.equals(DyeColor.YELLOW)){
+                    datawatcher.set(16, (byte) 4);
+                }
+            }
         } else
-            datawatcher.set(12, (int) 0);
+            datawatcher.set(12, 0);
     }
 
     /**
@@ -502,10 +605,11 @@ public class NPC implements InventoryHolder {
      * @return CommonPacket
      */
     private CommonPacket getSpawnPacket(){
-        if(mob != null)
+        if(mob != null) {
             return packetGenerator.getMobSpawnPacket();
-        else
+        }else {
             return packetGenerator.getPlayerSpawnPacket();
+        }
     }
 
     private static class RotationFix implements Runnable{

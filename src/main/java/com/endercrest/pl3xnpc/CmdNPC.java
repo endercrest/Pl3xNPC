@@ -4,6 +4,7 @@ import com.endercrest.pl3xnpc.npc.MobType;
 import com.endercrest.pl3xnpc.npc.NPC;
 import com.endercrest.pl3xnpc.npc.NPCManager;
 import com.endercrest.pl3xnpc.utils.Utils;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -86,12 +87,16 @@ public class CmdNPC implements CommandExecutor {
             name = args[1];
         }
         com.endercrest.pl3xnpc.npc.NPC npc = NPCManager.spawnNPC(name, p, p.getLocation());
+        cs.sendMessage(npc.getUUID().toString());
         plugin.getConfig().set("npcs." + npc.getId() + ".name", npc.getName());
         plugin.getConfig().set("npcs." + npc.getId() + ".owner", npc.getOwner());
         plugin.getConfig().set("npcs." + npc.getId() + ".world", npc.getLocation().getWorld().getName());
         plugin.getConfig().set("npcs." + npc.getId() + ".x", npc.getLocation().getX());
         plugin.getConfig().set("npcs." + npc.getId() + ".y", npc.getLocation().getY());
         plugin.getConfig().set("npcs." + npc.getId() + ".z", npc.getLocation().getZ());
+        plugin.getConfig().set("npcs." + npc.getId() + ".color", npc.getSheepColor().name());
+        plugin.getConfig().set("npcs." + npc.getId() + ".sheared", npc.getSheared());
+        plugin.getConfig().set("npcs." + npc.getId() + ".uuid", npc.getUUID().toString());
         plugin.saveConfig();
         cs.sendMessage(Pl3xNPC.colorize("&dCreated NPC."));
         if (p.hasPermission("pl3xnpc.select")) {
@@ -176,6 +181,10 @@ public class CmdNPC implements CommandExecutor {
             return setOwner(0, cs, args, npc);
         } else if (args[1].equalsIgnoreCase("showmobname")) {
             return showMobName(0, cs, args, npc);
+        } else if(args[1].equalsIgnoreCase("color")){
+            return setColor(0, cs, args, npc);
+        }else if(args[1].equalsIgnoreCase("sheared")){
+            return setSheared(0, cs, args, npc);
         }
         cs.sendMessage(Pl3xNPC.colorize("&4Unknown subcommand for 'set':"));
         return showSetHelp(cs, false);
@@ -444,6 +453,104 @@ public class CmdNPC implements CommandExecutor {
     }
 
     /**
+     * Set color of sheep
+     * @param argOffset The Offset
+     * @param cs The CommandSender
+     * @param args The Arguments
+     * @param npc The NPC
+     * @return true/false
+     */
+    private Boolean setColor(Integer argOffset, CommandSender cs, String[] args, NPC npc){
+        if (!hasPerm((Player) cs, "pl3xnpc.set.color")) {
+            return true;
+        }
+        if(args.length < 3 + argOffset){
+            cs.sendMessage(Pl3xNPC.colorize("&4Must specify a color!"));
+            return true;
+        }
+        DyeColor color;
+        if(args[2].equalsIgnoreCase("black")){
+            color = DyeColor.BLACK;
+        }else if(args[2].equalsIgnoreCase("blue")){
+            color = DyeColor.BLUE;
+        }else if(args[2].equalsIgnoreCase("brown")){
+            color = DyeColor.BROWN;
+        }else if(args[2].equalsIgnoreCase("cyan")){
+            color = DyeColor.CYAN;
+        }else if(args[2].equalsIgnoreCase("gray")){
+            color = DyeColor.GRAY;
+        }else if(args[2].equalsIgnoreCase("green")){
+            color = DyeColor.GREEN;
+        }else if(args[2].equalsIgnoreCase("light_blue")){
+            color = DyeColor.LIGHT_BLUE;
+        }else if(args[2].equalsIgnoreCase("lime")){
+            color = DyeColor.LIME;
+        }else if(args[2].equalsIgnoreCase("magenta")){
+            color = DyeColor.MAGENTA;
+        }else if(args[2].equalsIgnoreCase("orange")){
+            color = DyeColor.ORANGE;
+        }else if(args[2].equalsIgnoreCase("pink")){
+            color = DyeColor.PINK;
+        }else if(args[2].equalsIgnoreCase("purple")){
+            color = DyeColor.PURPLE;
+        }else if(args[2].equalsIgnoreCase("red")){
+            color = DyeColor.RED;
+        }else if(args[2].equalsIgnoreCase("silver")){
+            color = DyeColor.SILVER;
+        }else if(args[2].equalsIgnoreCase("white")){
+            color = DyeColor.WHITE;
+        }else if(args[2].equalsIgnoreCase("yellow")){
+            color = DyeColor.YELLOW;
+        }else{
+            cs.sendMessage(Pl3xNPC.colorize("&4You must specify a valid value!"));
+            return true;
+        }
+        Integer id = npc.getId();
+        plugin.getConfig().set("npcs." + id + ".color", color.name());
+        plugin.saveConfig();
+        World world = npc.getLocation().getWorld();
+        npc.setSheepColor(color);
+        npc.despawn();
+        npc.spawn(world);
+        cs.sendMessage(Pl3xNPC.colorize("&aSheep color has been set to: " + color.name()));
+        if (plugin.getConfig().getBoolean("debug-mode")) {
+            plugin.log("&dNPC changed color &7" + id);
+        }
+        return true;
+    }
+
+    private Boolean setSheared(Integer argOffset, CommandSender cs, String[] args, NPC npc){
+        if (!hasPerm((Player) cs, "pl3xnpc.set.sheared")) {
+            return true;
+        }
+        if (args.length < 3 + argOffset) {
+            cs.sendMessage(Pl3xNPC.colorize("&4Must specify a value!"));
+            return true;
+        }
+        Boolean bool;
+        if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("on") || args[2].equalsIgnoreCase("yes")) {
+            bool = true;
+        } else if (args[2].equalsIgnoreCase("false") || args[2].equalsIgnoreCase("off") || args[2].equalsIgnoreCase("no")) {
+            bool = false;
+        } else {
+            cs.sendMessage(Pl3xNPC.colorize("&4Must specify a valid value!"));
+            return true;
+        }
+        Integer id = npc.getId();
+        plugin.getConfig().set("npcs." + id + ".sheared", bool);
+        plugin.saveConfig();
+        World world = npc.getLocation().getWorld();
+        npc.setSheared(bool);
+        npc.despawn();
+        npc.spawn(world);
+        cs.sendMessage(Pl3xNPC.colorize("&dThe NPC " + ((bool) ? "is" : "is not") + " sheared."));
+        if (plugin.getConfig().getBoolean("debug-mode")) {
+            plugin.log("&dNPC changed showmobname &7" + id);
+        }
+        return true;
+    }
+
+    /**
      * Toggle to show the MobName
      * @param argOffset The Offset
      * @param cs The CommandSender
@@ -571,6 +678,7 @@ public class CmdNPC implements CommandExecutor {
         String newname = args[2 + argOffset];
         npc.setName(newname);
         plugin.getConfig().set("npcs." + id + ".name", newname);
+        plugin.getConfig().set("npcs." + id + ".uuid", npc.getUUID());
         plugin.saveConfig();
         cs.sendMessage(Pl3xNPC.colorize("&dNew name has been set."));
         if (plugin.getConfig().getBoolean("debug-mode")) {
@@ -1128,7 +1236,7 @@ public class CmdNPC implements CommandExecutor {
      */
     private Boolean  showSetHelp(CommandSender cs, Boolean isAdmin){
         cs.sendMessage(Pl3xNPC.colorize("&4Valid subcommands for &7/npc " + (isAdmin ? "admin " : "") + "set &4are:"));
-        cs.sendMessage(Pl3xNPC.colorize("&4face, item, lookat, message, mobtype, name, owner, showmobname"));
+        cs.sendMessage(Pl3xNPC.colorize("&4face, item, lookat, message, mobtype, name, owner, showmobname, color, sheared"));
         return true;
     }
 

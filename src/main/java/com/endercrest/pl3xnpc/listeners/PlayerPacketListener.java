@@ -48,8 +48,9 @@ public class PlayerPacketListener implements PacketListener {
             if (!player.hasPermission("pl3xnpc.select"))
                 return;
             NPC selected = NPCManager.getSelected(player.getName());
-            if(selected != null && selected == npc)
+            if(selected != null && selected == npc) {
                 return;
+            }
             NPCManager.setSelected(player.getName(), npc);
             player.sendMessage(Pl3xNPC.colorize("&dSelected NPC."));
             player.sendMessage(Pl3xNPC.colorize("&d- ID: &7" + npc.getId()));

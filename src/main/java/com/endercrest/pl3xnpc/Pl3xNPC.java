@@ -4,6 +4,8 @@ import com.endercrest.pl3xnpc.listeners.PlayerListener;
 import com.endercrest.pl3xnpc.npc.NPCManager;
 import com.endercrest.pl3xnpc.utils.PacketHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.material.Dye;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,7 +28,7 @@ public class Pl3xNPC extends JavaPlugin {
         if(!pm.isPluginEnabled("BKCommonLib")){
             log("&4[ERROR] Missing a required dependency, BKCommonLib was not found!");
             log("&4[ERROR] Pl3xNPC requires BKCommonLib to be installed and enabled to use");
-            log("&4[ERROR] Please download and istall BKCommonLib and restart server!");
+            log("&4[ERROR] Please download and install BKCommonLib and restart server!");
             log("&4[ERROR] Pl3xNPC will now disable itself");
             pm.disablePlugin(this);
             return;
@@ -48,7 +50,7 @@ public class Pl3xNPC extends JavaPlugin {
         getCommand("npc").setExecutor(new CmdNPC(this));
         new PacketHandler(this);
         restartRenderTask();
-        log("&av" + this.getDescription().getVersion() + " by EnderCrest and BillyGalbreath");
+        log("&av" + this.getDescription().getVersion() + " by EnderCrest and BillyGalbreath enabled");
     }
 
     @Override
@@ -102,5 +104,43 @@ public class Pl3xNPC extends JavaPlugin {
             taskID = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new RenderTask(this), 0, getConfig().getInt("update-interval", 3));
             if (getConfig().getBoolean("debug-mode"))
                 log("&dRestarting Rendering Task");
+    }
+
+    public DyeColor getDyeByName(String color){
+        if(color.equalsIgnoreCase("black")){
+            return DyeColor.BLACK;
+        }else if(color.equalsIgnoreCase("blue")){
+            return DyeColor.BLUE;
+        }else if(color.equalsIgnoreCase("brown")){
+            return DyeColor.BROWN;
+        }else if(color.equalsIgnoreCase("cyan")){
+            return DyeColor.CYAN;
+        }else if(color.equalsIgnoreCase("gray")){
+            return DyeColor.GRAY;
+        }else if(color.equalsIgnoreCase("green")){
+            return DyeColor.GREEN;
+        }else if(color.equalsIgnoreCase("light_blue")){
+            return DyeColor.LIGHT_BLUE;
+        }else if(color.equalsIgnoreCase("lime")){
+            return DyeColor.LIME;
+        }else if(color.equalsIgnoreCase("magenta")){
+            return DyeColor.MAGENTA;
+        }else if(color.equalsIgnoreCase("orange")){
+            return DyeColor.ORANGE;
+        }else if(color.equalsIgnoreCase("pink")){
+            return DyeColor.PINK;
+        }else if(color.equalsIgnoreCase("purple")){
+            return DyeColor.PURPLE;
+        }else if(color.equalsIgnoreCase("red")){
+            return DyeColor.RED;
+        }else if(color.equalsIgnoreCase("silver")){
+            return DyeColor.SILVER;
+        }else if(color.equalsIgnoreCase("white")){
+            return DyeColor.WHITE;
+        }else if(color.equalsIgnoreCase("yellow")){
+            return DyeColor.YELLOW;
+        }else{
+            return DyeColor.WHITE;
+        }
     }
 }

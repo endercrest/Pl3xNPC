@@ -12,10 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -200,6 +197,17 @@ public class NPCManager {
             name = conf.getString(id + ".name");
         NPC npc = new NPC(id, nextId--, loc, name, null);
         npc.setOwner(conf.getString(id + ".owner"));
+        if(conf.isSet(id + ".color")) {
+            npc.setSheepColor(plugin.getDyeByName(conf.getString(id + ".color")));
+        }
+        if(conf.isSet(id + ".sheared")) {
+            npc.setSheared(conf.getBoolean(id + ".sheared"));
+        }
+        if(conf.isSet(id + ".uuid")){
+            npc.setUUID(conf.getString(id + ".uuid"));
+        }else{
+            npc.setUUID(UUID.randomUUID().toString());
+        }
         if (conf.get(id + ".mobtype") != null) {
             if (conf.get(id + ".showmobname") != null) {
                 Boolean showName = conf.getBoolean(id + ".showmobname");
@@ -466,6 +474,8 @@ public class NPCManager {
             plugin.log("&dNPC changed " + typeString + " &7" + item.getType().toString());
         return true;
     }
+
+
 
 
 }
